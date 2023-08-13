@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {width} from '../../../Theme/Layout';
 import {Movie} from '../../../redux/types';
 
@@ -12,9 +13,11 @@ const SliderItem: React.FC<SliderItemProps> = ({item, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.movieItem}>
-        <Image
+        <FastImage
           source={{uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`}}
           style={styles.poster}
+          resizeMode={FastImage.resizeMode.cover}
+          onError={() => console.log('bray')}
         />
       </View>
     </TouchableOpacity>
