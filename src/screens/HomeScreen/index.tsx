@@ -1,12 +1,19 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import {Dispatch} from 'redux';
+import {Container, Content} from '../../components/Organism';
+import {
+  MOVIE_LIST_TYPE_NOW_PLAYING,
+  MOVIE_LIST_TYPE_POPULAR,
+  MOVIE_LIST_TYPE_TOP_RATED,
+  MOVIE_LIST_TYPE_UPCOMING,
+} from '../../constant/movie';
 import {RootStackParamList} from '../../navigation/AppNavigator';
 import {fetchMovies} from '../../redux/actions';
-import MovieSlider from './components/MovieSlider';
-import {Dispatch} from 'redux';
 import {RootState} from '../../store';
+import MovieSlider from './components/MovieSlider';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -18,10 +25,15 @@ const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const HomeScreen: React.FC<Props> = ({navigation}) => {
   const dispatch = useDispatch<Dispatch<any>>();
-  const movies = useTypedSelector(state => state.movie.movies);
+  const {now_playing, popular, upcoming, top_rated} = useTypedSelector(
+    state => state.movie.movieSlider,
+  );
 
   useEffect(() => {
-    dispatch(fetchMovies() as any);
+    dispatch(fetchMovies(MOVIE_LIST_TYPE_NOW_PLAYING) as any);
+    dispatch(fetchMovies(MOVIE_LIST_TYPE_POPULAR) as any);
+    dispatch(fetchMovies(MOVIE_LIST_TYPE_UPCOMING) as any);
+    dispatch(fetchMovies(MOVIE_LIST_TYPE_TOP_RATED) as any);
   }, [dispatch]);
 
   const navigateToMovieDetail = (movieId: number) => {
@@ -29,18 +41,30 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <MovieSlider
-        title="Now Playing"
-        movies={movies}
-        onMoviePress={navigateToMovieDetail}
-      />
-      <MovieSlider
-        title="Popular Movies"
-        movies={movies}
-        onMoviePress={navigateToMovieDetail}
-      />
-    </View>
+    <Container style={styles.container}>
+      <Content>
+        <MovieSlider
+          title="Now Playing"
+          movies={now_playing}
+          onMoviePress={navigateToMovieDetail}
+        />
+        <MovieSlider
+          title="Popular Movies"
+          movies={popular}
+          onMoviePress={navigateToMovieDetail}
+        />
+        <MovieSlider
+          title="Upcoming"
+          movies={upcoming}
+          onMoviePress={navigateToMovieDetail}
+        />
+        <MovieSlider
+          title="Top Rated"
+          movies={top_rated}
+          onMoviePress={navigateToMovieDetail}
+        />
+      </Content>
+    </Container>
   );
 };
 

@@ -19,7 +19,6 @@ const MovieSlider: React.FC<MovieSliderProps> = ({
   const renderMovieItem = ({item}: {item: Movie}) => (
     <SliderItem item={item} onPress={() => onMoviePress(item.id)} />
   );
-
   return (
     <View style={styles.movieSlider}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -40,8 +39,7 @@ const MovieSlider: React.FC<MovieSliderProps> = ({
 
 const styles = StyleSheet.create({
   movieSlider: {
-    marginVertical: 16,
-    marginTop: 0,
+    marginVertical: 8,
   },
   sectionTitle: {
     fontSize: 14,

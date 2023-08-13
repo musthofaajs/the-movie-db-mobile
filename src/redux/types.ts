@@ -15,15 +15,23 @@ export interface Movie {
   vote_count: number;
 }
 
+export interface MovieSliderState {
+  now_playing: Movie[];
+  popular: Movie[];
+  upcoming: Movie[];
+  top_rated: Movie[];
+}
+
 export interface MovieState {
   movies: Movie[];
+  movieSlider: MovieSliderState;
 }
 
 export const FETCH_MOVIES_SUCCESS = 'FETCH_MOVIES_SUCCESS';
 
 interface FetchMoviesSuccessAction {
   type: typeof FETCH_MOVIES_SUCCESS;
-  payload: Movie[];
+  payload: {movies: Movie[]; type: string};
 }
 
 export type MovieActionTypes = FetchMoviesSuccessAction;
