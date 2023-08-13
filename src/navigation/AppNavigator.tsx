@@ -1,4 +1,7 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import React from 'react';
 import HomeScreen from '../screens/HomeScreen';
 import MovieDetailScreen from '../screens/MovieDetailScreen';
@@ -10,25 +13,26 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-type ScreenOption = {
+interface NavigationOption {
   name: keyof RootStackParamList;
   component: React.ComponentType<any>;
-};
+  options?: StackNavigationOptions;
+}
 
-const screenOptions: ScreenOption[] = [
-  {name: 'Home', component: HomeScreen},
-  {name: 'MovieDetail', component: MovieDetailScreen},
+const screenOptions: NavigationOption[] = [
+  {name: 'Home', component: HomeScreen, options: {headerShown: false}},
+  {
+    name: 'MovieDetail',
+    component: MovieDetailScreen,
+    options: {headerShown: false},
+  },
 ];
 
 const AppNavigator: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator>
       {screenOptions.map(option => (
-        <Stack.Screen
-          key={option.name}
-          name={option.name}
-          component={option.component}
-        />
+        <Stack.Screen key={option.name} {...option} />
       ))}
     </Stack.Navigator>
   );

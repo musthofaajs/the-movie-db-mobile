@@ -1,19 +1,14 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {Dispatch} from 'redux';
+import {width} from '../Theme/Layout';
 import {RootStackParamList} from '../navigation/AppNavigator';
 import {fetchMovies} from '../redux/actions';
-import {RootState} from '../store';
 import {Movie} from '../redux/types';
+import {RootState} from '../store';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -21,12 +16,11 @@ type Props = {
   navigation: HomeScreenNavigationProp;
 };
 
-// Define a typed useSelector hook
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const HomeScreen: React.FC<Props> = ({navigation}) => {
   const dispatch = useDispatch<Dispatch<any>>();
-  const movies = useTypedSelector(state => state.movie.movies);
+  const movies = useTypedSelector(state => state.movie.movies.slice(0, 10));
 
   useEffect(() => {
     dispatch(fetchMovies() as any);
@@ -36,24 +30,30 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     navigation.navigate('MovieDetail', {movieId});
   };
 
-  const renderMovieItem = ({item}: {item: Movie}) => (
+  const renderMovieItem = ({item}: {item: Movie; index: number}) => (
     <TouchableOpacity onPress={() => navigateToMovieDetail(item.id)}>
       <View style={styles.movieItem}>
         <Image
           source={{uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`}}
           style={styles.poster}
         />
-        <Text style={styles.title}>{item.title}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <Text style={styles.sectionTitle}>Popular Movies</Text>
+      <Carousel
         data={movies}
         renderItem={renderMovieItem}
-        keyExtractor={item => item.id.toString()}
+        sliderWidth={width}
+        itemWidth={width * 0.285}
+        inactiveSlideScale={1}
+        activeSlideAlignment="start"
+        activeSlideOffset={10}
+        enableMomentum
+        decelerationRate="fast"
       />
     </View>
   );
@@ -62,22 +62,36 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginVertical: 6,
+    marginLeft: width * 0.01,
+  },
+  carouselContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   movieItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  poster: {
-    width: 100,
-    height: 150,
-    marginRight: 10,
+    width: width * 0.265,
+    aspectRatio: 2 / 3,
+    borderRadius: 8,
+    marginRight: 16,
+    marginLeft: width * 0.01,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 8,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  poster: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
 });
 
