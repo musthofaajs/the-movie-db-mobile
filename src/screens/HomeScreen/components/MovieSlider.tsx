@@ -8,7 +8,7 @@ import SliderItem from './SliderItem';
 type MovieSliderProps = {
   title: string;
   movies: Movie[];
-  onMoviePress: (movieId: number) => void;
+  onMoviePress: (movie: Movie) => void;
 };
 
 const MovieSlider: React.FC<MovieSliderProps> = ({
@@ -17,7 +17,7 @@ const MovieSlider: React.FC<MovieSliderProps> = ({
   onMoviePress,
 }) => {
   const renderMovieItem = ({item}: {item: Movie}) => (
-    <SliderItem item={item} onPress={() => onMoviePress(item.id)} />
+    <SliderItem item={item} onPress={() => onMoviePress(item)} />
   );
   return (
     <View style={styles.movieSlider}>

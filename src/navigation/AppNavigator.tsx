@@ -3,12 +3,13 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import React from 'react';
+import {Movie} from '../redux/types';
 import HomeScreen from '../screens/HomeScreen';
 import MovieDetailScreen from '../screens/MovieDetailScreen';
 
 export type RootStackParamList = {
   Home: undefined;
-  MovieDetail: {movieId: number};
+  MovieDetail: {movie: Movie};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

@@ -17,7 +17,6 @@ const SliderItem: React.FC<SliderItemProps> = ({item, onPress}) => {
           source={{uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}`}}
           style={styles.poster}
           resizeMode={FastImage.resizeMode.cover}
-          onError={() => console.log('bray')}
         />
       </View>
     </TouchableOpacity>

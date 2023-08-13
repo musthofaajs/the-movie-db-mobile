@@ -1,8 +1,13 @@
 import {Reducer} from 'redux';
-import {FETCH_MOVIES_SUCCESS, MovieState} from '../types';
+import {
+  FETCH_MOVIES_SUCCESS,
+  FETCH_MOVIE_DETAIL_SUCCESS,
+  MovieState,
+} from '../types';
 
 const initialState: MovieState = {
   movies: [],
+  movieDetail: null,
   movieSlider: {
     now_playing: [],
     popular: [],
@@ -22,6 +27,11 @@ const movieReducer: MovieReducer = (state = initialState, action) => {
           ...state.movieSlider,
           [action.payload.type]: action.payload.movies,
         },
+      };
+    case FETCH_MOVIE_DETAIL_SUCCESS:
+      return {
+        ...state,
+        movieDetail: action.payload,
       };
     default:
       return state;

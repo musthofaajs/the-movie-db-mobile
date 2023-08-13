@@ -1,8 +1,7 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
-import {Dispatch} from 'redux';
+import {TypedUseSelectorHook, useSelector} from 'react-redux';
 import {Container, Content} from '../../components/Organism';
 import {
   MOVIE_LIST_TYPE_NOW_PLAYING,
@@ -12,7 +11,8 @@ import {
 } from '../../constant/movie';
 import {RootStackParamList} from '../../navigation/AppNavigator';
 import {fetchMovies} from '../../redux/actions';
-import {RootState} from '../../store';
+import {Movie} from '../../redux/types';
+import store, {RootState} from '../../store';
 import MovieSlider from './components/MovieSlider';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -24,7 +24,7 @@ type Props = {
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const HomeScreen: React.FC<Props> = ({navigation}) => {
-  const dispatch = useDispatch<Dispatch<any>>();
+  const {dispatch} = store;
   const {now_playing, popular, upcoming, top_rated} = useTypedSelector(
     state => state.movie.movieSlider,
   );
@@ -36,8 +36,8 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     dispatch(fetchMovies(MOVIE_LIST_TYPE_TOP_RATED) as any);
   }, [dispatch]);
 
-  const navigateToMovieDetail = (movieId: number) => {
-    navigation.navigate('MovieDetail', {movieId});
+  const navigateToMovieDetail = (movie: Movie) => {
+    navigation.navigate('MovieDetail', {movie});
   };
 
   return (
