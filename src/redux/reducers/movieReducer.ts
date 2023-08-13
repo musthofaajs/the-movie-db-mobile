@@ -8,6 +8,7 @@ import {
 const initialState: MovieState = {
   movies: [],
   movieDetail: null,
+  featuredMovie: null,
   movieSlider: {
     now_playing: [],
     popular: [],
@@ -31,7 +32,7 @@ const movieReducer: MovieReducer = (state = initialState, action) => {
     case FETCH_MOVIE_DETAIL_SUCCESS:
       return {
         ...state,
-        movieDetail: action.payload,
+        [action.payload.type]: action.payload.detail,
       };
     default:
       return state;

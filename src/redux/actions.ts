@@ -5,6 +5,7 @@ import {
   FETCH_MOVIE_DETAIL_SUCCESS,
   MovieActionTypes,
   MovieDetailActionTypes,
+  MovieDetailType,
 } from './types';
 
 const API_KEY = '52b49cd6fd8a546d3890b27ed47fe682';
@@ -31,7 +32,10 @@ export const fetchMovies = (type = 'popular') => {
   };
 };
 
-export const fetchMovieDetail = (movieId: number) => {
+export const fetchMovieDetail = (
+  movieId: number,
+  type: MovieDetailType = MovieDetailType.MovieDetail,
+) => {
   return async (dispatch: Dispatch<MovieDetailActionTypes>) => {
     try {
       const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
@@ -43,7 +47,7 @@ export const fetchMovieDetail = (movieId: number) => {
       const movieDetails = response.data;
       dispatch({
         type: FETCH_MOVIE_DETAIL_SUCCESS,
-        payload: movieDetails,
+        payload: {detail: movieDetails, type},
       });
     } catch (error) {
       console.error('Error fetching movie details:', error);

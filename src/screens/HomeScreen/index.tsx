@@ -19,9 +19,10 @@ import {
   MOVIE_LIST_TYPE_UPCOMING,
 } from '../../constant/movie';
 import {RootStackParamList} from '../../navigation/AppNavigator';
-import {fetchMovies} from '../../redux/actions';
-import {Movie} from '../../redux/types';
+import {fetchMovieDetail, fetchMovies} from '../../redux/actions';
+import {Movie, MovieDetail, MovieDetailType} from '../../redux/types';
 import store, {RootState} from '../../store';
+import {humanizeDate} from '../../utils/helpers';
 import MovieSlider from './components/MovieSlider';
 
 type HomeScreenNavigationProp = RouteProp<RootStackParamList, 'Home'>;
@@ -40,7 +41,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     state => state.movie.movieSlider,
   );
 
-  const [featuredMovie, setFeaturedMovie] = React.useState<Movie | null>(null);
+  const featuredMovie = useTypedSelector(state => state.movie.featuredMovie);
 
   useEffect(() => {
     if (isFocused) {
@@ -52,13 +53,16 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
   }, [isFocused]);
 
   useEffect(() => {
-    if (now_playing && now_playing.length > 0) {
-      const randomIndex = Math.floor(Math.random() * now_playing.length);
-      setFeaturedMovie(now_playing[randomIndex]);
+    if (popular && popular.length > 0) {
+      const randomIndex = Math.floor(Math.random() * popular.length);
+      const featured = popular[randomIndex];
+      dispatch(
+        fetchMovieDetail(featured.id, MovieDetailType.FeaturedMovie) as any,
+      );
     }
-  }, [now_playing]);
+  }, [popular]);
 
-  const navigateToMovieDetail = (movie: Movie) => {
+  const navigateToMovieDetail = (movie: Movie | MovieDetail) => {
     navigation.navigate('MovieDetail', {movie});
   };
 
@@ -80,7 +84,18 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
               }}
               style={styles.featuredImage}
               resizeMode={FastImage.resizeMode.cover}>
-              <Text style={styles.featuredTitle}>{featuredMovie.title}</Text>
+              <Text style={styles.featuredTagline}>
+                "{featuredMovie.tagline}"
+              </Text>
+              <Text style={styles.featuredTitle}>
+                {featuredMovie.title} | {featuredMovie.vote_average.toFixed(2)}
+              </Text>
+              <Text style={styles.featuredRelease}>
+                Released |{' '}
+                {!featuredMovie.release_date
+                  ? 'Release Data Unknown'
+                  : `${humanizeDate(featuredMovie.release_date)}`}
+              </Text>
             </FastImage>
           </TouchableOpacity>
         )}
@@ -116,35 +131,46 @@ const styles = StyleSheet.create({
   },
   featuredContainer: {
     overflow: 'hidden',
-    paddingVertical: width * 0.0795,
+    paddingTop: width * 0.0795,
     paddingHorizontal: width * 0.025,
+    paddingBottom: width * 0.025,
     justifyContent: 'center',
     alignItems: 'center',
   },
   featuredImage: {
     flex: 1,
     borderWidth: 0.1,
-    borderColor: '#7e7e7e',
+    borderColor: '#b8b8b8',
     width: width * (1 - 0.025),
     height: undefined,
     aspectRatio: 9 / 16,
     justifyContent: 'flex-end',
     padding: 16,
     borderRadius: width * 0.015,
-    shadowColor: '#7e7e7e',
+    shadowColor: '#b8b8b8',
     shadowOffset: {
       width: 0,
-      height: 11,
+      height: 4,
     },
-    shadowOpacity: 0.23,
-    shadowRadius: 11.78,
-    elevation: 15,
+    shadowOpacity: 0.19,
+    shadowRadius: 5.62,
+    elevation: 6,
+  },
+  featuredTagline: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+    fontStyle: 'italic',
   },
   featuredTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 8,
+  },
+  featuredRelease: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
   },
 });
 

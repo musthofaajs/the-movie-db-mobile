@@ -60,6 +60,7 @@ export interface MovieSliderState {
 export interface MovieState {
   movies: Movie[];
   movieDetail: MovieDetail | null;
+  featuredMovie: MovieDetail | null;
   movieSlider: MovieSliderState;
 }
 
@@ -73,9 +74,13 @@ interface FetchMoviesSuccessAction {
 
 export type MovieActionTypes = FetchMoviesSuccessAction;
 
+export enum MovieDetailType {
+  MovieDetail = 'movieDetail',
+  FeaturedMovie = 'featuredMovie',
+}
 interface FetchMovieDetailSuccessAction {
   type: typeof FETCH_MOVIE_DETAIL_SUCCESS;
-  payload: {movies: Movie[]; type: string};
+  payload: {detail: Movie; type: MovieDetailType};
 }
 
 export type MovieDetailActionTypes = FetchMovieDetailSuccessAction;

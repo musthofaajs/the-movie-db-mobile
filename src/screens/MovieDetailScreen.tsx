@@ -77,7 +77,7 @@ const MovieDetailScreen: React.FC<Props> = ({route}) => {
               );
             })}
           </View>
-          <Text style={styles.title}>{movie.vote_average}</Text>
+          <Text style={styles.title}>{movie.vote_average.toFixed(2)}</Text>
           <Text style={styles.overview}>{movie.overview}</Text>
         </View>
       </Content>
